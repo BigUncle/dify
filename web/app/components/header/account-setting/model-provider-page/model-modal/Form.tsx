@@ -101,18 +101,30 @@ function Form<
 
   const handleFormChange = (key: string, val: string | boolean) => {
     if (isEditMode && (key === '__model_type' || key === '__model_name'))
-      return
+      return;
 
-    setChangeKey(key)
-    const shouldClearVariable: Record<string, string | undefined> = {}
+    setChangeKey(key);
+    const shouldClearVariable: Record<string, string | undefined> = {};
     if (showOnVariableMap[key]?.length) {
       showOnVariableMap[key].forEach((clearVariable) => {
-        const schema = formSchemas.find(it => it.variable === clearVariable)
-        shouldClearVariable[clearVariable] = schema ? schema.default : undefined
-      })
+        const schema = formSchemas.find((it) => it.variable === clearVariable);
+        shouldClearVariable[clearVariable] = schema
+          ? schema.default
+          : undefined;
+      });
     }
-    onChange({ ...value, [key]: val, ...shouldClearVariable })
-  }
+    // 防御式：所有 string 字段都 trim
+    let newVal = val;
+    // __model_name 是 string 类型，需要 trim
+    if (typeof val === 'string' && key == '__model_name') {
+      // 打印 key 和 val
+      console.log(`key: ${key}, val: ${val}`);
+      // 打印 key 和 val 的类型
+      console.log(`key type: ${typeof key}, val type: ${typeof val}`);
+      newVal = val.trim();
+    }
+    onChange({ ...value, [key]: newVal, ...shouldClearVariable });
+  };
 
   const handleModelChanged = useCallback((key: string, model: any) => {
     const newValue = {
