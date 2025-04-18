@@ -113,16 +113,7 @@ function Form<
           : undefined;
       });
     }
-    // 防御式：所有 string 字段都 trim
-    let newVal = val;
-    // __model_name 是 string 类型，需要 trim
-    if (typeof val === 'string' && key == '__model_name') {
-      // 打印 key 和 val
-      console.log(`key: ${key}, val: ${val}`);
-      // 打印 key 和 val 的类型
-      console.log(`key type: ${typeof key}, val type: ${typeof val}`);
-      newVal = val.trim();
-    }
+    const newVal = val;
     onChange({ ...value, [key]: newVal, ...shouldClearVariable });
   };
 

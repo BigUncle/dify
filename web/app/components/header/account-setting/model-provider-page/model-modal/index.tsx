@@ -226,10 +226,14 @@ const ModelModal: FC<ModelModalProps> = ({
   const handleSave = async () => {
     try {
       setLoading(true)
+      const trimmedValue = {
+        ...value,
+        __model_name: typeof value.__model_name === 'string' ? value.__model_name.trim() : value.__model_name
+      }
       const res = await saveCredentials(
         providerFormSchemaPredefined,
         provider.provider,
-        encodeSecretValues(value),
+        encodeSecretValues(trimmedValue),
         {
           ...draftConfig,
           enabled: Boolean(draftConfig?.enabled),
